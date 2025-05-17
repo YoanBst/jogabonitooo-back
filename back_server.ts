@@ -16,6 +16,46 @@ const client = new Client({
   tls: false // ou true si Dooku/Postgres l'exige
 });
 await client.connect();
+async function createTablesIfNotExist() {
+  try {
+    await client.queryObject(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        username TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        role TEXT NOT NULL
+      );
+      CREATE TABLE IF NOT EXISTS messages (
+        id SERIAL PRIMARY KEY,
+        owner TEXT NOT NULL,
+        message TEXT NOT NULL
+      );
+      CREATE TABLE IF NOT EXISTS commandes (
+        id SERIAL PRIMARY KEY,
+        owner TEXT NOT NULL,
+        adress TEXT NOT NULL,
+        total NUMERIC NOT NULL
+      );
+      CREATE TABLE IF NOT EXISTS delivery_country (
+        id SERIAL PRIMARY KEY,
+        commande_id INTEGER REFERENCES commandes(id),
+        country TEXT NOT NULL
+      );
+      CREATE TABLE IF NOT EXISTS command_items (
+        id SERIAL PRIMARY KEY,
+        commande_id INTEGER REFERENCES commandes(id),
+        product_name TEXT NOT NULL,
+        price NUMERIC NOT NULL,
+        quantity INTEGER NOT NULL,
+        size TEXT
+      );
+    `);
+    console.log("✅ Tables créées ou déjà existantes.");
+  } catch (error) {
+    console.error("🔥 Erreur lors de la création des tables :", error.message);
+  }
+}
+await createTablesIfNotExist();
 
 const app = new Application();
 
