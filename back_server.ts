@@ -20,7 +20,7 @@ await client.connect();
 const app = new Application();
 
 app.use(oakCors({
-  origin: "http://jogabonitooo-front.cluster-ig3.igpolytech.fr/",
+  origin: "https://jogabonitooo-front.cluster-ig3.igpolytech.fr/",
   credentials: true,
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
