@@ -11,9 +11,9 @@ const client = new Client({
   user: "postgres",
   password: "123",
   database: "base",
-  hostname: "localhost",
+  hostname: "postgres://postgres:447573369753b1c9829d29aaf55e14c2@dokku-postgres-jogabonitooo-db:5432/jogabonitooo_db",
   port: 5432,
-  tls: false,  // ou config TLS si tu l’utilises
+  tls: false,  
 });
 
 await client.connect();
@@ -21,7 +21,7 @@ await client.connect();
 const app = new Application();
 
 app.use(oakCors({
-  origin: "https://localhost:8000",
+  origin: "http://jogabonitooo-front.cluster-ig3.igpolytech.fr/",
   credentials: true,
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
