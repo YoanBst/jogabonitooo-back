@@ -92,6 +92,12 @@ app.use(async (ctx, next) => {
   }
 });
 
+
+router.get("/.well-known/acme-challenge/:token", (ctx) => {
+  ctx.response.status = 200;
+  ctx.response.body = "dokku-acme-challenge";
+});
+
 // Route pour la commande
 router.post("/api/commande", async (ctx) => {
   try {
