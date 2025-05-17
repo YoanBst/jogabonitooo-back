@@ -414,9 +414,4 @@ app.use(router.allowedMethods());
 
 // Démarrage du serveur
 console.log("Backend ready at https://localhost:3000");
-await app.listen({
-  port: 3000,
-  secure: true,
-  certFile: "./cert.pem",
-  keyFile: "./key.pem",
-});
+await app.listen({ port: 3000 });
