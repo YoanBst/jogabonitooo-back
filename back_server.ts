@@ -9,13 +9,12 @@ import { decode } from "https://deno.land/x/djwt/mod.ts";
 
 const client = new Client({
   user: "postgres",
-  password: "123",
-  database: "base",
-  hostname: "postgres://postgres:447573369753b1c9829d29aaf55e14c2@dokku-postgres-jogabonitooo-db:5432/jogabonitooo_db",
+  password: "447573369753b1c9829d29aaf55e14c2",
+  database: "jogabonitooo_db",
+  hostname: "dokku-postgres-jogabonitooo-db",
   port: 5432,
-  tls: false,  
+  tls: false // ou true si Dooku/Postgres l'exige
 });
-
 await client.connect();
 
 const app = new Application();
