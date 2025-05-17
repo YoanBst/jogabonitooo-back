@@ -413,5 +413,6 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 // Démarrage du serveur
-console.log("Backend ready at https://localhost:3000");
-await app.listen({ port: 3000 });
+const PORT = Deno.env.get("PORT") || 3000;
+console.log(`Backend ready at http://0.0.0.0:${PORT}`);
+await app.listen({ port: +PORT });
