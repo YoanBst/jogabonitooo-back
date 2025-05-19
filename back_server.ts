@@ -458,7 +458,19 @@ createDefaultUser();
 app.use(router.routes());
 app.use(router.allowedMethods());
 
+
+
 // Démarrage du serveur
-const PORT = Deno.env.get("PORT") || "3000";
+const PORT = Deno.env.get("PORT") || "5000";
 console.log(`Backend ready at http://0.0.0.0:${PORT}`);
 await app.listen({ port: +PORT });
+
+
+
+
+
+
+
+
+
+

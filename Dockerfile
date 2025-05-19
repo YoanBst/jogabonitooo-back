@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Expose le port sur lequel ton serveur écoute
-EXPOSE 3000
+EXPOSE 5000
 
 # Commande de démarrage de l'application
 CMD ["run", "--allow-net", "--allow-read", "--allow-env", "back_server.ts"]
