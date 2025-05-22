@@ -13,7 +13,7 @@ const client = new Client({
   database: "jogabonitooo_db",
   hostname: "dokku-postgres-jogabonitooo-db",
   port: 5432,
-  tls: false // ou true si Dooku/Postgres l'exige
+  tls: false 
 });
 await client.connect();
 async function createTablesIfNotExist() {
@@ -192,6 +192,33 @@ router.delete("/users/:id", async (ctx) => {
     ctx.response.body = { message: "User deleted" };
   } catch (error) {
     console.error("🔥 Error in /users/:id delete:", error.message);
+    ctx.response.status = 500;
+    ctx.response.body = { message: "Internal Server Error" };
+  }
+});
+
+router.get("/admin/messages", async (ctx) => {
+  const result = await client.queryObject("SELECT id, owner, message FROM messages ORDER BY id DESC");
+  ctx.response.body = { messages: result.rows };
+});
+
+
+router.delete("/messages/:id", async (ctx) => {
+  try {
+    const { id } = ctx.params;
+    const result = await client.queryObject(
+      "DELETE FROM messages WHERE id = $1",
+      [id]
+    );
+    if (result.rowCount === 0) {
+      ctx.response.status = 404;
+      ctx.response.body = { message: "Message not found" };
+      return;
+    }
+    ctx.response.status = 200;
+    ctx.response.body = { message: "Message deleted" };
+  } catch (error) {
+    console.error("🔥 Error in /messages/:id delete:", error.message);
     ctx.response.status = 500;
     ctx.response.body = { message: "Internal Server Error" };
   }
