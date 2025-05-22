@@ -197,6 +197,39 @@ router.delete("/users/:id", async (ctx) => {
   }
 });
 
+router.get("/api/messages/all", async (ctx) => {
+  try {
+    const result = await client.queryObject<{ id: number; owner: string; message: string }>(
+      "SELECT id, owner, message FROM messages ORDER BY id DESC"
+    );
+    ctx.response.status = 200;
+    ctx.response.body = { messages: result.rows };
+  } catch (error) {
+    ctx.response.status = 500;
+    ctx.response.body = { error: "Erreur lors de la récupération des messages" };
+  }
+});
+
+router.delete("/api/messages/:id", async (ctx) => {
+  try {
+    const { id } = ctx.params;
+    const result = await client.queryObject(
+      "DELETE FROM messages WHERE id = $1",
+      [id]
+    );
+    if (result.rowCount === 0) {
+      ctx.response.status = 404;
+      ctx.response.body = { message: "Message not found" };
+      return;
+    }
+    ctx.response.status = 200;
+    ctx.response.body = { message: "Message deleted" };
+  } catch (error) {
+    ctx.response.status = 500;
+    ctx.response.body = { message: "Internal Server Error" };
+  }
+});
+
 
 // Fonction pour hasher le mot de passe
 async function get_hash(password: string): Promise<string> {
