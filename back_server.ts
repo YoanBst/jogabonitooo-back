@@ -230,6 +230,22 @@ router.delete("/api/messages/:id", async (ctx) => {
   }
 });
 
+router.get("/api/ventes-produits", async (ctx) => {
+  try {
+    const result = await client.queryObject<{ nom: string; quantite: number }>(
+      `SELECT produit AS nom, SUM(quantite) AS quantite
+       FROM commandes
+       GROUP BY produit
+       ORDER BY quantite DESC`
+    );
+    ctx.response.status = 200;
+    ctx.response.body = { ventes: result.rows };
+  } catch (error) {
+    ctx.response.status = 500;
+    ctx.response.body = { error: "Erreur lors de la récupération des ventes" };
+  }
+});
+
 
 // Fonction pour hasher le mot de passe
 async function get_hash(password: string): Promise<string> {
