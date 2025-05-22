@@ -197,10 +197,6 @@ router.delete("/users/:id", async (ctx) => {
   }
 });
 
-router.get("/", (ctx) => {
-  ctx.response.status = 200;
-  ctx.response.body = { message: "API Jogabonitooo backend is running 🚀" };
-});
 
 // Fonction pour hasher le mot de passe
 async function get_hash(password: string): Promise<string> {
