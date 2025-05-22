@@ -252,6 +252,28 @@ router.get("/api/ventes-produits", async (ctx) => {
   }
 });
 
+router.get("/api/ventes-pays", async (ctx) => {
+  try {
+    const result = await client.queryObject<{ pays: string; quantite: number | bigint }>(
+      `SELECT country AS pays, COUNT(*) AS quantite
+       FROM delivery_country
+       GROUP BY country
+       ORDER BY quantite DESC`
+    );
+    // Conversion BigInt -> Number pour chaque ligne
+    const ventes = result.rows.map(v => ({
+      pays: v.pays,
+      quantite: typeof v.quantite === "bigint" ? Number(v.quantite) : v.quantite
+    }));
+    ctx.response.status = 200;
+    ctx.response.body = { ventes };
+  } catch (error) {
+    console.error("🔥 Erreur SQL ventes-pays :", error);
+    ctx.response.status = 500;
+    ctx.response.body = { error: "Erreur lors de la récupération des ventes" };
+  }
+});
+
 // Fonction pour hasher le mot de passe
 async function get_hash(password: string): Promise<string> {
   try {
