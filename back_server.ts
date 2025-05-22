@@ -232,21 +232,25 @@ router.delete("/api/messages/:id", async (ctx) => {
 
 router.get("/api/ventes-produits", async (ctx) => {
   try {
-    const result = await client.queryObject<{ nom: string; quantite: number }>(
-    `SELECT product_name AS nom, SUM(quantity) AS quantite
-    FROM command_items
-    GROUP BY product_name
-    ORDER BY quantite DESC`
-);
+    const result = await client.queryObject<{ nom: string; quantite: number | bigint }>(
+      `SELECT product_name AS nom, SUM(quantity) AS quantite
+       FROM command_items
+       GROUP BY product_name
+       ORDER BY quantite DESC`
+    );
+    // Conversion BigInt -> Number pour chaque ligne
+    const ventes = result.rows.map(v => ({
+      nom: v.nom,
+      quantite: typeof v.quantite === "bigint" ? Number(v.quantite) : v.quantite
+    }));
     ctx.response.status = 200;
-    ctx.response.body = { ventes: result.rows };
+    ctx.response.body = { ventes };
   } catch (error) {
     console.error("🔥 Erreur SQL ventes-produits :", error);
     ctx.response.status = 500;
     ctx.response.body = { error: "Erreur lors de la récupération des ventes" };
-}
+  }
 });
-
 
 // Fonction pour hasher le mot de passe
 async function get_hash(password: string): Promise<string> {
