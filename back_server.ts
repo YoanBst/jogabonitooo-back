@@ -233,11 +233,11 @@ router.delete("/api/messages/:id", async (ctx) => {
 router.get("/api/ventes-produits", async (ctx) => {
   try {
     const result = await client.queryObject<{ nom: string; quantite: number }>(
-      `SELECT produit AS nom, SUM(quantite) AS quantite
-       FROM commandes
-       GROUP BY produit
-       ORDER BY quantite DESC`
-    );
+    `SELECT product_name AS nom, SUM(quantity) AS quantite
+    FROM command_items
+    GROUP BY product_name
+    ORDER BY quantite DESC`
+);
     ctx.response.status = 200;
     ctx.response.body = { ventes: result.rows };
   } catch (error) {
