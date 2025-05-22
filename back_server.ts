@@ -197,10 +197,7 @@ router.delete("/users/:id", async (ctx) => {
   }
 });
 
-router.get("/admin/messages", async (ctx) => {
-  const result = await client.queryObject("SELECT id, owner, message FROM messages ORDER BY id DESC");
-  ctx.response.body = { messages: result.rows };
-});
+
 
 
 router.delete("/messages/:id", async (ctx) => {
