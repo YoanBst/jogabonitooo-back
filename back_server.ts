@@ -241,9 +241,10 @@ router.get("/api/ventes-produits", async (ctx) => {
     ctx.response.status = 200;
     ctx.response.body = { ventes: result.rows };
   } catch (error) {
+    console.error("🔥 Erreur SQL ventes-produits :", error);
     ctx.response.status = 500;
     ctx.response.body = { error: "Erreur lors de la récupération des ventes" };
-  }
+}
 });
 
 
