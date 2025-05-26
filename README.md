@@ -7,7 +7,7 @@ Fonctionnalités :
 
     Possibilité pour l'utilisateur d’écrire un avis sur le site
 
-    Le message est affiché, puis 4 messages aléatoires (s'ils existent) l’accompagnent
+    Le message est affiché, puis le reste des messages de la base l'accompagne
 
     Ajout au panier des différents articles, avec choix de la taille
 
@@ -39,3 +39,5 @@ Site déployé sur le serveur Polytech :
     Front : https://jogabonitooo-front.cluster-ig3.igpolytech.fr/
 
     Back : https://jogabonitoo-back.cluster-ig3.igpolytech.fr/
+
+    lien pour accéder au site :  https://jogabonitooo-front.cluster-ig3.igpolytech.fr/
