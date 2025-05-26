@@ -1,6 +1,6 @@
 import { Application, Router } from "https://deno.land/x/oak@v11.1.0/mod.ts";
 import * as bcrypt from "https://deno.land/x/bcrypt@v0.2.4/mod.ts";
-import { Client } from "https://deno.land/x/postgres@v0.17.0/mod.ts"; // PostgreSQL import
+import { Client } from "https://deno.land/x/postgres@v0.17.0/mod.ts"; 
 import { oakCors } from "https://deno.land/x/cors@v1.2.2/mod.ts";
 import { setCookie } from "https://deno.land/x/oak@v11.1.0/cookies.ts";
 import { create, verify } from "https://deno.land/x/djwt@v2.6/mod.ts";
@@ -13,7 +13,7 @@ const client = new Client({
   database: "jogabonitooo_db",
   hostname: "dokku-postgres-jogabonitooo-db",
   port: 5432,
-  tls: false // ou true si Dooku/Postgres l'exige
+  tls: false 
 });
 await client.connect();
 async function createTablesIfNotExist() {
@@ -182,7 +182,7 @@ router.delete("/users/:id", async (ctx) => {
       "DELETE FROM users WHERE id = $1",
       [id]
     );
-    // result.rowCount pour vérifier la suppression
+    
     if (result.rowCount === 0) {
       ctx.response.status = 404;
       ctx.response.body = { message: "User not found" };
@@ -238,7 +238,7 @@ router.get("/api/ventes-produits", async (ctx) => {
        GROUP BY product_name
        ORDER BY quantite DESC`
     );
-    // Conversion BigInt -> Number pour chaque ligne
+    
     const ventes = result.rows.map(v => ({
       nom: v.nom,
       quantite: typeof v.quantite === "bigint" ? Number(v.quantite) : v.quantite
@@ -260,7 +260,7 @@ router.get("/api/ventes-pays", async (ctx) => {
        GROUP BY country
        ORDER BY quantite DESC`
     );
-    // Conversion BigInt -> Number pour chaque ligne
+    
     const ventes = result.rows.map(v => ({
       pays: v.pays,
       quantite: typeof v.quantite === "bigint" ? Number(v.quantite) : v.quantite
@@ -328,7 +328,7 @@ router.post("/register", async (ctx) => {
   }
 });
 
-// 🔐 Initialisation de la clé secrète pour JWT
+//Initialisation de la clé secrète pour JWT
 const secretString = "vraiment-secret";
 const secretKey = await crypto.subtle.importKey(
   "raw",
@@ -339,7 +339,7 @@ const secretKey = await crypto.subtle.importKey(
 );
 
 router.post("/login", async (ctx) => {
-  console.log("✅ Route /login hit");
+  console.log(" Route /login hit");
   try {
     const body = await ctx.request.body({ type: "json" }).value;
     const { username, password } = body;
@@ -347,7 +347,7 @@ router.post("/login", async (ctx) => {
     if (!username || !password) {
       ctx.response.status = 400;
       ctx.response.body = { message: "Username and password are required" };
-      console.log("❌ Missing username or password");
+      console.log(" Missing username or password");
       return;
     }
 
@@ -358,7 +358,7 @@ router.post("/login", async (ctx) => {
     if (result.rows.length === 0) {
       ctx.response.status = 401;
       ctx.response.body = { message: "Invalid username or password" };
-      console.log("❌ Invalid username or password");
+      console.log(" Invalid username or password");
       return;
     }
 
@@ -371,7 +371,7 @@ router.post("/login", async (ctx) => {
     if (!match) {
       ctx.response.status = 401;
       ctx.response.body = { message: "Invalid username or password" };
-      console.log("❌ Password mismatch");
+      console.log(" Password mismatch");
       return;
     }
 
@@ -386,9 +386,9 @@ router.post("/login", async (ctx) => {
     ctx.response.status = 200;
     ctx.response.body = { message: "Login successful", userId, role };
 
-    console.log("✅ Login successful");
+    console.log(" Login successful");
   } catch (error) {
-    console.error("🔥 Error in /login:", error.message);
+    console.error(" Error in /login:", error.message);
     ctx.response.status = 500;
     ctx.response.body = {
       message: "Internal Server Error",
@@ -414,7 +414,7 @@ router.get("/get-token", async (ctx) => {
   console.log("✅ Token returned to client");
 });
 
-// WebSocket handler
+
 router.get("/ws", async (ctx) => {
   if (ctx.isUpgradable) {
     const socket = await ctx.upgrade();
@@ -431,7 +431,7 @@ router.get("/ws", async (ctx) => {
 
         if (!token) {
           socket.send(JSON.stringify({ error: "Unauthorized: No token provided" }));
-          console.log("❌ No token in WebSocket message");
+          console.log(" No token in WebSocket message");
           return;
         }
 
@@ -455,14 +455,14 @@ router.get("/ws", async (ctx) => {
         }
         console.log("✅ Message broadcasted to all WebSocket clients");
       } catch (err) {
-        console.error("🔥 Error handling WebSocket message:", err);
+        console.error(" Error handling WebSocket message:", err);
         socket.send(JSON.stringify({ error: "Unauthorized: Invalid token" }));
       }
     };
 
     socket.onclose = () => {
       connections.delete(socket);
-      console.log("🔌 WebSocket connection closed");
+      console.log(" WebSocket connection closed");
     };
   } else {
     ctx.throw(400, "WebSocket Upgrade required");
@@ -470,7 +470,7 @@ router.get("/ws", async (ctx) => {
 });
 
 router.get("/me", async (ctx) => {
-  console.log("✅ Route /me hit");
+  console.log(" Route /me hit");
 
   const token = ctx.cookies.get("auth_token");
   console.log("Received token:", token);
@@ -478,7 +478,7 @@ router.get("/me", async (ctx) => {
   if (!token) {
     ctx.response.status = 401;
     ctx.response.body = { error: "Unauthorized" };
-    console.log("❌ No token found, unauthorized");
+    console.log(" No token found, unauthorized");
     return;
   }
 
@@ -493,16 +493,16 @@ router.get("/me", async (ctx) => {
     if (result.rows.length === 0) {
       ctx.response.status = 401;
       ctx.response.body = { error: "Unauthorized" };
-      console.log("❌ User not found, unauthorized");
+      console.log(" User not found, unauthorized");
       return;
     }
 
     const user = result.rows[0];
     ctx.response.status = 200;
     ctx.response.body = { username: user.username, name: user.name };
-    console.log("✅ User found, user data sent");
+    console.log(" User found, user data sent");
   } catch (err) {
-    console.error("🔥 Error in /me:", err.message, err.stack);
+    console.error(" Error in /me:", err.message, err.stack);
     ctx.response.status = 401;
     ctx.response.body = { error: "Unauthorized" };
   }
@@ -521,17 +521,17 @@ async function createDefaultUser() {
         "INSERT INTO users (username, password_hash, role) VALUES ($1, $2, $3)",
         ["admin30190", password_hash, role]
       );
-      console.log("✅ Utilisateur 'admin30190' créé avec succès.");
+      console.log(" Utilisateur 'admin30190' créé avec succès.");
     } else {
-      console.log("✅ L'utilisateur 'admin30190' existe déjà.");
+      console.log(" L'utilisateur 'admin30190' existe déjà.");
     }
   } catch (error) {
-    console.error("🔥 Erreur lors de la création de l'utilisateur par défaut :", error.message);
+    console.error(" Erreur lors de la création de l'utilisateur par défaut :", error.message);
   }
 }
 createDefaultUser();
 
-// Utilisation des routes
+
 app.use(router.routes());
 app.use(router.allowedMethods());
 
